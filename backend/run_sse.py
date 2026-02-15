@@ -16,9 +16,13 @@ def build_remote_app() -> Starlette:
     - SSE endpoints: /sse and /messages
     - Streamable HTTP endpoint: /mcp
     """
-    app = mcp.sse_app("/sse")
-    streamable_app = mcp.streamable_http_app()
-    app.router.routes.extend(streamable_app.router.routes)
+    # IMPORTANT:
+    # Streamable HTTP requires its own lifespan startup to initialize
+    # the internal task group/session manager. Therefore we keep the
+    # streamable app as the base app, then append SSE routes.
+    app = mcp.streamable_http_app()
+    sse_app = mcp.sse_app("/sse")
+    app.router.routes.extend(sse_app.router.routes)
     return app
 
 
