@@ -73,4 +73,4 @@ echo ""
 echo "Deployment completed."
 echo "Web UI:     http://localhost:18080"
 echo "MCP SSE:    http://localhost:18081/sse"
-
+echo "MCP HTTP:   http://localhost:18081/mcp"

@@ -73,4 +73,4 @@ Write-Host ""
 Write-Host "Deployment completed."
 Write-Host "Web UI:     http://localhost:18080"
 Write-Host "MCP SSE:    http://localhost:18081/sse"
-
+Write-Host "MCP HTTP:   http://localhost:18081/mcp"
