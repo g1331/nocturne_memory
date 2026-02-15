@@ -286,6 +286,8 @@ python backend/run_sse.py
 ```
 SSE Endpoint: `http://localhost:8000/sse`
 
+Docker 一键部署与远程接入排障请查看：`docs/DOCKER_DEPLOY.md`
+
 ### Demo 数据库
 项目自带 `demo.db`，包含预配置的示例记忆（`core://agent`, `core://my_user`）。
 打开即用，无需从零开始。

@@ -24,6 +24,7 @@ from dotenv import load_dotenv, find_dotenv
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 from db.sqlite_client import get_sqlite_client
 from db.snapshot import get_snapshot_manager
 
@@ -41,8 +42,33 @@ else:
     if _dotenv_path:
         load_dotenv(_dotenv_path)
 
+def _parse_csv_env(name: str, default: str) -> list[str]:
+    """Parse comma-separated env value into a cleaned list."""
+    return [v.strip() for v in os.getenv(name, default).split(",") if v.strip()]
+
+
+# Transport security is configured via environment variables.
+# This avoids hardcoding deployment domain names in source code.
+MCP_ALLOWED_HOSTS = _parse_csv_env(
+    "MCP_ALLOWED_HOSTS",
+    "127.0.0.1:*,localhost:*,[::1]:*",
+)
+MCP_ALLOWED_ORIGINS = _parse_csv_env(
+    "MCP_ALLOWED_ORIGINS",
+    "http://127.0.0.1:*,http://localhost:*,http://[::1]:*",
+)
+
+
 # Initialize FastMCP server
-mcp = FastMCP("Nocturne Memory Interface")
+mcp = FastMCP(
+    "Nocturne Memory Interface",
+    host=os.getenv("MCP_SERVER_HOST", "0.0.0.0"),
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=MCP_ALLOWED_HOSTS,
+        allowed_origins=MCP_ALLOWED_ORIGINS,
+    ),
+)
 
 # =============================================================================
 # Domain Configuration

@@ -285,6 +285,8 @@ python backend/run_sse.py
 ```
 SSE Endpoint: `http://localhost:8000/sse`
 
+For Docker one-click deployment and remote MCP troubleshooting, see: `docs/DOCKER_DEPLOY.md`
+
 ### Demo Database
 The project ships with `demo.db`, which contains pre-configured example memories (`core://agent`, `core://my_user`).
 Ready to use out of the box — no need to start from scratch.

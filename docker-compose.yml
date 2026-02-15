@@ -39,6 +39,9 @@ services:
       DATABASE_URL: sqlite+aiosqlite:////data/nocturne.db
       HOST: 0.0.0.0
       PORT: 8001
+      MCP_SERVER_HOST: 0.0.0.0
+      MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-127.0.0.1:*,localhost:*,[::1]:*}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:-http://127.0.0.1:*,http://localhost:*,http://[::1]:*}
     volumes:
       - dbdata:/data
     ports:
@@ -60,4 +63,3 @@ services:
 
 volumes:
   dbdata:
-
