@@ -63,7 +63,7 @@ docker compose up -d --build
 
 if ! wait_service_state backend healthy 180 || \
    ! wait_service_state web running 120 || \
-   ! wait_service_state mcp running 120; then
+   ! wait_service_state mcp healthy 120; then
   echo "Deployment failed. Showing recent logs..."
   docker compose logs --no-color --tail=200 backend web mcp
   exit 1
