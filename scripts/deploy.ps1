@@ -61,11 +61,11 @@ docker compose up -d --build
 try {
     Wait-ServiceState -ServiceName "backend" -ExpectedState "healthy" -TimeoutSeconds 180
     Wait-ServiceState -ServiceName "web" -ExpectedState "running" -TimeoutSeconds 120
-    Wait-ServiceState -ServiceName "mcp-sse" -ExpectedState "running" -TimeoutSeconds 120
+    Wait-ServiceState -ServiceName "mcp" -ExpectedState "running" -TimeoutSeconds 120
 }
 catch {
     Write-Host "Deployment failed. Showing recent logs..." -ForegroundColor Red
-    docker compose logs --no-color --tail=200 backend web mcp-sse
+    docker compose logs --no-color --tail=200 backend web mcp
     throw
 }
 

@@ -40,7 +40,7 @@ docker compose ps
 
 ## 4. Remote MCP 必要环境变量
 
-`mcp-sse` 默认启用了 Host 与 Origin 校验。公网域名接入前必须设置：
+`mcp` 服务默认启用了 Host 与 Origin 校验。公网域名接入前必须设置：
 
 ```bash
 cd ~/nocturne_memory
@@ -50,8 +50,8 @@ MCP_ALLOWED_HOSTS=mcp.example.com,mcp.example.com:*
 MCP_ALLOWED_ORIGINS=https://mcp.example.com
 EOF
 
-docker compose up -d --build --force-recreate mcp-sse
-docker compose exec mcp-sse env | grep '^MCP_ALLOWED'
+docker compose up -d --build --force-recreate mcp
+docker compose exec mcp env | grep '^MCP_ALLOWED'
 ```
 
 请把示例域名 `mcp.example.com` 替换成你自己的真实域名。
@@ -94,7 +94,7 @@ curl -i http://127.0.0.1:18080/
 curl -i -N http://127.0.0.1:18081/sse
 curl -i -N http://127.0.0.1:18081/sse -H "Host: mcp.example.com"
 curl -i -X POST http://127.0.0.1:18081/mcp -H "Content-Type: application/json" -d "{}"
-docker compose logs --tail=120 mcp-sse
+docker compose logs --tail=120 mcp
 ```
 
 客户端公网验证：
@@ -111,11 +111,11 @@ curl.exe -vk -X POST https://mcp.example.com/mcp -H "Content-Type: application/j
 | `claude mcp list` 失败，SSE 地址写成 `/see` | 路径拼写错误 | 改为 `/sse` |
 | `codex mcp list` 报 `Unexpected content type: text/plain` | 把 Codex URL 配到了 SSE 端点（`/sse`） | 改为 streamable HTTP 端点 `/mcp` |
 | `curl` 报 `SEC_E_ILLEGAL_MESSAGE` | TLS 握手失败（证书或 Cloudflare 边缘配置） | 检查 Cloudflare 证书状态、SSL 模式与域名覆盖 |
-| `GET /sse` 返回 `421 Misdirected Request` | Host 不在 FastMCP 允许列表 | 正确设置 `.env` 的 `MCP_ALLOWED_HOSTS` 并重建 `mcp-sse` |
+| `GET /sse` 返回 `421 Misdirected Request` | Host 不在 FastMCP 允许列表 | 正确设置 `.env` 的 `MCP_ALLOWED_HOSTS` 并重建 `mcp` 服务 |
 | `POST /sse/messages?...` 返回 `404` | 反代没有把 `/sse/messages` 正确转到后端 `/messages` | 单独配置 `/sse/messages` 反代规则 |
 
 ## 9. 生产建议
 
 - 优先使用一级子域名，避免证书覆盖复杂度上升。
 - 保持 `MCP_ALLOWED_HOSTS` 与 `MCP_ALLOWED_ORIGINS` 最小化，不要放宽到任意来源。
-- 每次改反代规则后都执行一次 `claude mcp list` 与 `docker compose logs --tail=120 mcp-sse` 联合验证。
+- 每次改反代规则后都执行一次 `claude mcp list` 与 `docker compose logs --tail=120 mcp` 联合验证。
