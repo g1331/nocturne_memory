@@ -13,7 +13,7 @@
 ## 2. 首次部署
 
 ```bash
-git clone -b feature/docker-deploy --single-branch https://github.com/g1331/nocturne_memory.git
+git clone https://github.com/Dataojitori/nocturne_memory.git
 cd nocturne_memory
 chmod +x scripts/deploy.sh
 ./scripts/deploy.sh
@@ -22,7 +22,7 @@ chmod +x scripts/deploy.sh
 如果你使用 Windows PowerShell：
 
 ```powershell
-git clone -b feature/docker-deploy --single-branch https://github.com/g1331/nocturne_memory.git
+git clone https://github.com/Dataojitori/nocturne_memory.git
 cd nocturne_memory
 pwsh ./scripts/deploy.ps1
 ```
@@ -32,8 +32,8 @@ pwsh ./scripts/deploy.ps1
 ```bash
 cd ~/nocturne_memory
 git fetch origin
-git checkout feature/docker-deploy
-git pull --ff-only origin feature/docker-deploy
+git checkout main
+git pull --ff-only origin main
 docker compose up -d --build
 docker compose ps
 ```
@@ -46,15 +46,15 @@ docker compose ps
 cd ~/nocturne_memory
 sed -i '/^MCP_ALLOWED_HOSTS=/d;/^MCP_ALLOWED_ORIGINS=/d' .env
 cat >> .env <<'EOF'
-MCP_ALLOWED_HOSTS=mcp.example.com,mcp.example.com:*
-MCP_ALLOWED_ORIGINS=https://mcp.example.com
+MCP_ALLOWED_HOSTS=127.0.0.1:*,localhost:*,[::1]:*,mcp.example.com,mcp.example.com:*
+MCP_ALLOWED_ORIGINS=http://127.0.0.1:*,http://localhost:*,http://[::1]:*,https://mcp.example.com
 EOF
 
 docker compose up -d --build --force-recreate mcp
 docker compose exec mcp env | grep '^MCP_ALLOWED'
 ```
 
-请把示例域名 `mcp.example.com` 替换成你自己的真实域名。
+请把示例域名 `mcp.example.com` 替换成你自己的真实域名，并保留 `127.0.0.1` / `localhost` / `[::1]` 这三组本机来源，便于本机排障验证。
 
 ## 5. 反向代理配置要点
 
